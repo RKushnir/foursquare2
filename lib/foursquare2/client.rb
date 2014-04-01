@@ -1,12 +1,49 @@
 require 'forwardable'
+require 'faraday'
+require 'json'
+require 'hashie/mash'
 
 module Foursquare2
+  class ParseJson < Faraday::Response::Middleware
+    WHITESPACE_REGEX = /\A^\s*$\z/
+
+    def parse(body)
+      case body
+      when WHITESPACE_REGEX, nil
+        nil
+      else
+        JSON.parse(body, :symbolize_names => true)
+      end
+    end
+
+    def on_complete(response)
+      response.body = parse(response.body) if respond_to?(:parse) && !unparsable_status_codes.include?(response.status)
+    end
+
+    def unparsable_status_codes
+      [204, 301, 302, 304]
+    end
+  end
+
+  class Mashify < Faraday::Response::Middleware
+    def parse(body)
+      case body
+      when Hash
+        ::Hashie::Mash.new(body)
+      when Array
+        body.map { |item| parse(item) }
+      else
+        body
+      end
+    end
+  end
+
   class Client
     DEFAULT_CONNECTION_MIDDLEWARE = [
       Faraday::Request::Multipart,
       Faraday::Request::UrlEncoded,
-      FaradayMiddleware::Mashify,
-      FaradayMiddleware::ParseJson
+      Mashify,
+      ParseJson,
     ]
 
     extend Forwardable

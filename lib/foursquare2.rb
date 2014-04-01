@@ -1,6 +1,3 @@
-require 'faraday'
-require 'faraday_middleware'
-
 directory = File.expand_path(File.dirname(__FILE__))
 
 module Foursquare2
@@ -41,7 +38,4 @@ module Foursquare2
   require 'foursquare2/events'
   require 'foursquare2/client'
   require 'foursquare2/api_error'
-
-
 end
-

@@ -21,8 +21,8 @@ class TestClient < Test::Unit::TestCase
       Foursquare2.configure do |config|
         config.connection_middleware = [:middleware]
       end
-      Faraday::Builder.any_instance.expects(:use).at_least_once
-      Faraday::Builder.any_instance.expects(:use) \
+      Faraday::RackBuilder.any_instance.expects(:use).at_least_once
+      Faraday::RackBuilder.any_instance.expects(:use) \
         .with(:middleware)
       client = Foursquare2::Client.new
       client.connection
@@ -76,24 +76,26 @@ class TestClient < Test::Unit::TestCase
       @client.ssl[:ca_file].should == 'path_to_ca_file'
     end
 
+    class DummyMiddleware
+    end
+
     should "apply the middleware to the connection" do
-      middleware = [FaradayMiddleware::Instrumentation,
-                    [FaradayMiddleware::ParseJson, {:content_type => /\bjson$/}]]
+      middleware = [[DummyMiddleware, {:content_type => /\bjson$/}]]
       client = Foursquare2::Client.new(:connection_middleware => middleware)
 
-      Faraday::Builder.any_instance.expects(:use).at_least_once
-      Faraday::Builder.any_instance.expects(:use) \
-        .with(FaradayMiddleware::Instrumentation)
-      Faraday::Builder.any_instance.expects(:use) \
-        .with(FaradayMiddleware::ParseJson, {:content_type => /\bjson$/})
+      Faraday::RackBuilder.any_instance.expects(:use).at_least_once
+      Faraday::RackBuilder.any_instance.expects(:use) \
+        .with(DummyMiddleware, {:content_type => /\bjson$/})
 
       client.connection
     end
   end
 
+  FakeResponse = Struct.new(:body)
+
   context "When returning a successful response" do
     should "return the response body as a Hash." do
-      response = Faraday::Response.new(:body => fixture_file('venues/search_venues.json', :parse => true))
+      response = FakeResponse.new(fixture_file('venues/search_venues.json', parse: true))
       client   = Foursquare2::Client.new
 
       subject = client.return_error_or_body(response, response.body.response)
@@ -103,7 +105,7 @@ class TestClient < Test::Unit::TestCase
 
   context "When returning a unsucessful response(error)" do
     should "raise Foursquare2::Error." do
-      response = Faraday::Response.new(:body => fixture_file('error.json', :parse => true))
+      response = FakeResponse.new(fixture_file('error.json', parse: true))
       client   = Foursquare2::Client.new
 
       assert_raises(Foursquare2::APIError) do
