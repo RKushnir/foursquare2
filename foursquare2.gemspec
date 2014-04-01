@@ -132,7 +132,7 @@ Gem::Specification.new do |s|
       s.add_development_dependency(%q<shoulda>, [">= 0"])
       s.add_development_dependency(%q<bundler>, ["~> 1.0"])
       s.add_development_dependency(%q<jeweler>, ["~> 1.5"])
-      s.add_development_dependency(%q<rcov>, [">= 0"])
+      s.add_development_dependency(%q<simplecov>, ["~> 0.7.1"])
       s.add_development_dependency(%q<fakeweb>, ["~> 1.3"])
       s.add_development_dependency(%q<jnunemaker-matchy>, ["~> 0.4"])
       s.add_development_dependency(%q<json_pure>, ["~> 1.4"])
@@ -145,7 +145,7 @@ Gem::Specification.new do |s|
       s.add_dependency(%q<shoulda>, [">= 0"])
       s.add_dependency(%q<bundler>, ["~> 1.0"])
       s.add_dependency(%q<jeweler>, ["~> 1.5"])
-      s.add_dependency(%q<rcov>, [">= 0"])
+      s.add_dependency(%q<simplecov>, ["~> 0.7.1"])
       s.add_dependency(%q<fakeweb>, ["~> 1.3"])
       s.add_dependency(%q<jnunemaker-matchy>, ["~> 0.4"])
       s.add_dependency(%q<json_pure>, ["~> 1.4"])
@@ -159,11 +159,10 @@ Gem::Specification.new do |s|
     s.add_dependency(%q<shoulda>, [">= 0"])
     s.add_dependency(%q<bundler>, ["~> 1.0"])
     s.add_dependency(%q<jeweler>, ["~> 1.5"])
-    s.add_dependency(%q<rcov>, [">= 0"])
+    s.add_dependency(%q<simplecov>, ["~> 0.7.1"])
     s.add_dependency(%q<fakeweb>, ["~> 1.3"])
     s.add_dependency(%q<jnunemaker-matchy>, ["~> 0.4"])
     s.add_dependency(%q<json_pure>, ["~> 1.4"])
     s.add_dependency(%q<multi_json>, ["< 2.0.0", ">= 0.0.5"])
   end
 end
-
