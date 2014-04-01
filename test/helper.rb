@@ -46,19 +46,19 @@ def fixture_file(filename, options={})
 end
 
 def stub_get(url, filename, options={})
-  opts = {
-    :body => error_or_standard_body(filename, options),
-    :content_type => 'application/json; charset=utf-8'
-  }.merge(options)
-  FakeWeb.register_uri(:get, foursquare_url(url), opts)
+  stub_request :get, url, filename, options
 end
 
 def stub_post(url, filename, options={})
+  stub_request :post, url, filename, options
+end
+
+def stub_request(method, url, filename, options={})
   opts = {
-    :body => error_or_standard_body(filename, options),
-    :content_type => 'application/json; charset=utf-8'
+    body:         error_or_standard_body(filename, options),
+    content_type: 'application/json; charset=utf-8'
   }.merge(options)
-  FakeWeb.register_uri(:post, foursquare_url(url), opts)
+  FakeWeb.register_uri(method, foursquare_url(url), opts)
 end
 
 def error_or_standard_body(filename, options)
