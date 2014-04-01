@@ -30,7 +30,7 @@ def foursquare_test_client
 end
 
 def foursquare_url(url)
-  url =~ /^http/ ? url : "http://api.foursquare.com/v2#{url}"
+  url =~ /^http/ ? url : "https://api.foursquare.com/v2#{url}"
 end
 
 def fixture_file(filename, options={})
