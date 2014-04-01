@@ -1,4 +1,3 @@
-require 'forwardable'
 require 'faraday'
 require 'json'
 require 'hashie/mash'
