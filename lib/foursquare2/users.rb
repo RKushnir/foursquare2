@@ -149,9 +149,9 @@ module Foursquare2
     # @option options Integer :offset - Used to page through results.
 
 
-    def user_photos(options={})
+    def user_photos(user_id = 'self', options={})
       response = connection.get do |req|
-        req.url "users/self/photos", options
+        req.url "users/#{user_id}/photos", options
       end
       return_error_or_body(response, response.body.response.photos)
     end
